@@ -1,0 +1,12 @@
+/* reset margins and make root full height so child 100vh/100% works correctly */
+* { box-sizing: border-box; }
+html, body, #root {
+  height: 100%;
+  width:100%;
+  margin: 0;
+}
+
+/* prevent horizontal scroll caused by 100vw + scrollbar */
+body {
+  overflow-x: hidden;
+}

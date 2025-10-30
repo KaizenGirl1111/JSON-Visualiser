@@ -1,0 +1,23 @@
+.index-node {
+  min-width: 140px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 2px solid #047857;
+  background: #062b22;
+  color: #fff;
+  font-size: 13px;
+}
+
+.index-node-label {
+  font-weight: 600;
+}
+
+.index-node-value {
+  margin-top: 6px;
+}
+
+.index-node-path {
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.7;
+}

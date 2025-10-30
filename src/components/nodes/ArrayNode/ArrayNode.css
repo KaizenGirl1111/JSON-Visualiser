@@ -1,0 +1,24 @@
+.array-node-container{
+    min-width: 160;
+    padding: 8;
+    border-radius: 8;
+    border: "2px solid #7c3aed";
+    background: "#071133";
+    color: "#fff";
+    font-size: 13 
+}
+
+.array-label{
+    font-weight:600
+}
+
+.array-path{
+    margin-top:6;
+    font-size:11;
+    opacity:0.7
+}
+
+.array-length{
+    font-size:12;
+    opacity:0.8
+}
