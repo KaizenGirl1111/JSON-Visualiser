@@ -1,3 +1,5 @@
+import { StepEdge } from "@xyflow/react";
+
 //function to generate ids for graph node
 const nextIdFactory = (()=>{
     let c = 0;
@@ -23,6 +25,7 @@ export  function graphifyJSON  (value,rootKey="root"){
         id:`${from}_${to}`,
         source:from,
         target:to,
+        type:StepEdge,
         animated:false
     })
    }
@@ -42,7 +45,7 @@ export  function graphifyJSON  (value,rootKey="root"){
         const val = obj[key]
         const childPath = path?`${path}.${key}`:key
         if(val===null||typeof val!=="object"){
-            primitives.push(val)
+            primitives[key] = val
         }
         else if(Array.isArray(val)){
             const arrId = nextId("arr")

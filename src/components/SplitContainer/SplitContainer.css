@@ -4,34 +4,8 @@
   height: 100vh;
   background-color: #0b0b0f;
   color: #eaeaea;
-}
-
-/* Left panel */
-.text-container {
-  position: relative;
-  flex-basis: 500px;      /* initial width */
-  flex-shrink: 0;         /* don't shrink below flex-basis via flex rules */
-  min-width: 120px;       /* enforce a minimum width */
-  background-color: #0f1116;
-  border-right: 1px solid rgba(255,255,255,0.04);
-  box-sizing: border-box;
-  padding: 12px;
-}
-
-/* Textarea should fill the panel */
-.text-area {
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  resize: none;
-  padding: 12px;
-  font-family: monospace;
-  font-size: 13px;
-  background-color: #0b0b0d;
-  color: #e6e6e6;
-  border: 1px solid rgba(255,255,255,0.03);
-  border-radius: 6px;
-  outline: none;
+  height:"100%";
+  width:"100%"
 }
 
 /* Divider (draggable area) */

@@ -1,0 +1,8 @@
+.footer{
+width:100%;
+bottom:0;
+position:fixed;
+height:"5vh";
+background-color:black;
+color:green
+}

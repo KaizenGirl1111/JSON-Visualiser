@@ -1,15 +1,14 @@
 import {useState} from 'react'
 function ObjectNode({data}){
-   const {label,primitives={},path} = data;
+   const {label,primitives={}} = data;
    const [open,setOpen] = useState(false)
     return(
         <div className="object-node-container">
             <div className="object-node-header">
                <div className="object-label">{label}</div>
-               <div className="object-path">{path}</div>
             </div>
                  <div style={{ marginTop: 6 }}>
-        {Object.keys(primitives).length === 0 ? (
+         {Object.keys(primitives).length === 0 ? (
           <div className="placeholder">No primitives</div>
         ) : (
           <>

@@ -1,11 +1,43 @@
-import React, { useEffect, useRef } from "react";
+import { useState,useEffect, useRef } from "react";
 import "./SplitContainer.css";
+import GraphVisualiser from "../GraphVisualiser/GraphVisualiser";
+import InputArea from "../InputArea/InputArea";
+import JSONErrorContext from "../../utils/JSONErrorContext";
 
 function SplitContainer() {
   const isMouseDown = useRef(false);
   const leftPanelRef = useRef(null);
   const startXRef = useRef(0);
   const startWidthRef = useRef(0);
+    const [obj,setObj] = useState({
+  name: "jsontree",
+  private: true,
+  scripts: {
+    dev: "next dev",
+    build: "next build"
+  },
+  dependencies: {
+    react: "18.2.0",
+    config: "^13.4.7",
+    deep: {
+      nested: 1,
+      flag: true
+    }
+  },
+  tags: [
+    "ui",
+    "visualizer"
+  ],
+  misc: null,
+  nums: [
+    1,
+    2,
+    {
+      x: 5
+    }
+  ]
+}
+);
 
   const handleMouseDown = (e) => {
     // left button only
@@ -40,9 +72,9 @@ function SplitContainer() {
         document.body.style.cursor = "col-resize";
         e.preventDefault();
       
-    }
+     }
 
-  useEffect(() => {
+    useEffect(() => {
     function handleMouseMove(e) {
       if (!isMouseDown.current) return;
       const leftPanel = leftPanelRef.current;
@@ -92,17 +124,12 @@ function SplitContainer() {
     };
   }, []);
 
+
   return (
-    <div className="split-container">
-      <div ref={leftPanelRef} className="text-container">
-        <textarea className="text-area" placeholder="Paste or type JSON here..." />
-      </div>
-
+    <div className="split-container"> 
+      <InputArea leftPanelRef={leftPanelRef} obj={obj} setObj={setObj}/>
       <div className="divider" onMouseDown={handleMouseDown} onTouchStart={handleTouchStart} />
-
-      <div className="tree-display">
-        <div className="canvas-icon">{'{}'}</div>
-      </div>
+      <GraphVisualiser jsonText={obj}/>
     </div>
   );
 }
