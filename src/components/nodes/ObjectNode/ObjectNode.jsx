@@ -1,4 +1,6 @@
 import {useState} from 'react'
+import './ObjectNode.css'
+import { Handle,Position } from '@xyflow/react';
 function ObjectNode({data}){
    const {label,primitives={}} = data;
    const [open,setOpen] = useState(false)
@@ -28,6 +30,8 @@ function ObjectNode({data}){
           </>
         )}
       </div>
+      <Handle type="source" position={Position.Right} />
+      <Handle type="target" position={Position.Left} />
         </div>
     )
 }

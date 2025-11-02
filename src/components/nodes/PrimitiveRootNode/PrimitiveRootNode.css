@@ -1,8 +1,8 @@
 .primitive-root-node {
-  min-width: 140px;
+  max-width: 30px;
   padding: 8px;
-  border-radius: 8px;
   border: 2px dashed #065f46;
+  border-radius: 8px;
   background: #062b22;
   color: #fff;
   font-size: 13px;

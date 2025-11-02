@@ -25,7 +25,6 @@ function InputArea({leftPanelRef,obj,setObj}){
   
     return (
     <div ref={leftPanelRef} className="text-container">
-      {console.log("error from input area",jsonError)}
      <textarea className="text-area" placeholder="Paste or type JSON here..." value={text} onChange={handleTextArea}/>
     </div>
     )

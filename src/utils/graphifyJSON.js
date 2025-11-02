@@ -1,5 +1,3 @@
-import { StepEdge } from "@xyflow/react";
-
 //function to generate ids for graph node
 const nextIdFactory = (()=>{
     let c = 0;
@@ -25,8 +23,7 @@ export  function graphifyJSON  (value,rootKey="root"){
         id:`${from}_${to}`,
         source:from,
         target:to,
-        type:StepEdge,
-        animated:false
+     //   type:"step",
     })
    }
 
@@ -37,7 +34,7 @@ export  function graphifyJSON  (value,rootKey="root"){
         id,
         type:"objectNode",
         data:{path,label:path.split(".").slice(-1)[0]||"root",primitives},
-        position:{x:level*200,y:nodes.length*20},
+        position:{x:level*200,y:nodes.length*200},
         level
     })
 
@@ -53,7 +50,7 @@ export  function graphifyJSON  (value,rootKey="root"){
                 arrId,
                 type:"arrNode",
                 data:{path: childPath, label: `${key}[]`, length: val.length },
-                position:{x:(level+1)*200,y:nodes.length*20},
+                position:{x:(level+1)*200,y:nodes.length*200},
                 level:level+1
             });
             addEdge(id,arrId)
@@ -66,9 +63,10 @@ export  function graphifyJSON  (value,rootKey="root"){
                         idxId,
                         type:"indexNode",
                         data:{path:idxPath,label:`[${idx}]`,value:el},
-                        position:{x:(level+2)*200,y:nodes.length*20},
+                        position:{x:(level+2)*200,y:nodes.length*200},
                         level:level+2
                     })
+                    addEdge(arrId,idxId)
                 }
                 else{
                     const childId = processValue(el,idxPath,level+2)
@@ -92,7 +90,7 @@ export  function graphifyJSON  (value,rootKey="root"){
         id,
         type: "primitiveRootNode",
         data: { path, label: path.split(".").slice(-1)[0], value: val },
-        position: { x: level * 200, y: nodes.length * 20 },
+        position: { x: 0, y: 0 },
         level,
       });
       return id;
@@ -103,7 +101,7 @@ export  function graphifyJSON  (value,rootKey="root"){
         id: arrId,
         type: "arrayNode",
         data: { path, label: `${path.split(".").slice(-1)[0] || "array"}[]`, length: val.length },
-        position: { x: level * 200, y: nodes.length * 20 },
+        position: { x: level * 200, y: nodes.length * 200 },
         level,
       });
       val.forEach((el, idx) => {
@@ -114,7 +112,7 @@ export  function graphifyJSON  (value,rootKey="root"){
             id: idxId,
             type: "indexNode",
             data: { path: idxPath, label: `[${idx}]`, value: el },
-            position: { x: (level + 1) * 200, y: nodes.length * 20 },
+            position: { x: (level + 1) * 200, y:  nodes.length * 200 },
             level: level + 1,
           });
           addEdge(arrId, idxId);

@@ -1,5 +1,5 @@
 .index-node {
-  min-width: 140px;
+  max-width: 12rem;
   padding: 8px;
   border-radius: 8px;
   border: 2px solid #047857;

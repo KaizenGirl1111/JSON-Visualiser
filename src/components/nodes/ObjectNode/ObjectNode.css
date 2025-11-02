@@ -1,8 +1,8 @@
 .object-node-container{
-    min-width: 220;
+    max-width: 12rem;
     padding:8;
+    border: 2px solid white;
     border-radius:8;
-    border: "2px solid white";
     background: #0b1220;
     color: #fff;
     font-size:13

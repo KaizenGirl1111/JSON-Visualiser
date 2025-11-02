@@ -1,10 +1,10 @@
 .array-node-container{
-    min-width: 160;
+    max-width: 12rem;
     padding: 8;
     border-radius: 8;
-    border: "2px solid white";
-    background: "#071133";
-    color: "#fff";
+    border: 2px solid white;
+    background: #084d03c6;
+    color: #fff;
     font-size: 13 
 }
 

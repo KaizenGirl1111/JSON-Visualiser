@@ -1,10 +1,13 @@
 import './ArrayNode.css'
+import { Handle,Position } from '@xyflow/react';
 function ArrayNode({ data }) {
 const { label, length = 0 } = data;
 return (
 <div className="array-node-container">
 <div className="array-label">{label}</div>
-<div style={{ fontSize: 12, opacity: 0.8 }}>length: {length}</div>
+<div className="array-length">length: {length}</div>
+ <Handle type="source" position={Position.Right} />
+ <Handle type="target" position={Position.Left} />
 </div>
 );
 }

@@ -40,7 +40,6 @@ function SplitContainer() {
 );
 
   const handleMouseDown = (e) => {
-    // left button only
     if (e.button !== 0) return;
     const leftPanel = leftPanelRef.current;
     if (!leftPanel) return;

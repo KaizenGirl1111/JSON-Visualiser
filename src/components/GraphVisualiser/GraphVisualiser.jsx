@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   ReactFlow,
   ReactFlowProvider,
+  Panel,
   Controls,
   Background,
   MiniMap,
@@ -17,7 +18,7 @@ import ArrayNode from "../nodes/ArrayNode/ArrayNode";
 import IndexNode from "../nodes/IndexNode/IndexNode";
 import PrimitiveRootNode from "../nodes/PrimitiveRootNode/PrimitiveRootNode";
 import { graphifyJSON } from "../../utils/graphifyJSON";
-
+import '@xyflow/react/dist/style.css'
 // import { applySimpleTreeLayout } from '../../utils/layout';
 
 const nodeTypes = {
@@ -89,16 +90,7 @@ const [rawEdges,setRawEdges] = useState(edges)
 //     setEdges(safeEdges);
 //   }, [rawNodes, rawEdges, setNodes, setEdges]);
 
-//   // THE documented pattern for onNodesChange / onEdgesChange:
-//   const onNodesChange = useCallback(
-//     (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-//     [setNodes]
-//   );
 
-//   const onEdgesChange = useCallback(
-//     (changes) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-//     [setEdges]
-//   );
 
  const onConnect = useCallback((params) => setRawEdges((eds) => addEdge({ ...params, type: 'smoothstep' }, eds)), [setRawEdges]);
   {console.log(rawNodes,rawEdges)}
@@ -112,13 +104,9 @@ const [rawEdges,setRawEdges] = useState(edges)
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
-          fitView
-    //      onInit={onInit}
-         // attributionPosition="bottom-left"
+
         >
-      {/*   <MiniMap /> 
-          <Controls />
-          <Background gap={16} /> */}
+          <Controls/>
         </ReactFlow>
       </div>
     </ReactFlowProvider>
