@@ -1,109 +1,107 @@
-//function to generate ids for graph node
-const nextIdFactory = (()=>{
-    let c = 0;
-    return (prefix="n")=>
-        typeof crypto!=="undefined" && crypto.UUID? crypto.UUID(): `${prefix}_${++c}`
-})()
+// id factory (keeps your original intent; use crypto.randomUUID when available)
+const nextIdFactory = (() => {
+  let c = 0;
+  return (prefix = "n") =>
+    typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${prefix}_${++c}`;
+})();
 
-export  function graphifyJSON  (value,rootKey="root"){
+export function graphifyJSON(value, rootKey = "root") {
+  const nodes = [];
+  const edges = [];
+  const nextId = nextIdFactory;
 
-   //initialise nodes,edges and nodeId
-   const nodes = []
-   const edges = []
-   const nextId = nextIdFactory
-   
-   //helper functions to add node and add edges
-   function addNode(node){
-     nodes.push(node)
-     return node.id
-   }
-   
-   function addEdge(from,to){
+  function addNode(node) {
+    if (!node.id) node.id = nextId("n");
+    nodes.push(node);
+    return node.id;
+  }
+
+  function addEdge(from, to) {
     edges.push({
-        id:`${from}_${to}`,
-        source:from,
-        target:to,
-     //   type:"step",
-    })
-   }
+      id: `${from}_${to}`,
+      source: from,
+      target: to,
+    });
+  }
 
-   function processObject(obj,path,level){
-    const id = nextId("obj")
-    const primitives = {}
+  function processObject(obj, path, level) {
+    const id = nextId("obj");
+    const primitives = {};
     addNode({
-        id,
-        type:"objectNode",
-        data:{path,label:path.split(".").slice(-1)[0]||"root",primitives},
-        position:{x:level*200,y:nodes.length*200},
-        level
-    })
+      id,
+      type: "objectNode",
+      data: { path, label: path.split(".").slice(-1)[0] || "root", primitives },
+      position: { x: level * 220, y: nodes.length * 90 },
+      level,
+    });
 
-    for(const key of Object.keys(obj)){
-        const val = obj[key]
-        const childPath = path?`${path}.${key}`:key
-        if(val===null||typeof val!=="object"){
-            primitives[key] = val
-        }
-        else if(Array.isArray(val)){
-            const arrId = nextId("arr")
+    for (const key of Object.keys(obj)) {
+      const val = obj[key];
+      const childPath = path ? `${path}.${key}` : key;
+
+      if (val === null || typeof val !== "object") {
+        primitives[key] = val;
+      } else if (Array.isArray(val)) {
+        const arrId = nextId("arr");
+        addNode({
+          id: arrId, 
+          type: "arrayNode", 
+          data: { path: childPath, label: `${key}[]`, length: val.length },
+          position: { x: (level + 1) * 220, y: nodes.length * 90 },
+          level: level + 1,
+        });
+        addEdge(id, arrId);
+
+        val.forEach((el, idx) => {
+          const idxPath = `${childPath}[${idx}]`;
+          if (el === null || typeof el !== "object") {
+            const idxId = nextId("idx");
             addNode({
-                arrId,
-                type:"arrNode",
-                data:{path: childPath, label: `${key}[]`, length: val.length },
-                position:{x:(level+1)*200,y:nodes.length*200},
-                level:level+1
+              id: idxId,
+              type: "indexNode",
+              data: { path: idxPath, label: `[${idx}]`, value: el },
+              position: { x: (level + 2) * 220, y: nodes.length * 90 },
+              level: level + 2,
             });
-            addEdge(id,arrId)
-
-            val.forEach((el,idx)=>{
-                const idxPath = `${childPath}[${idx}]`;
-                if(el===null||typeof el!=="object"){
-                    const idxId = nextId("idx")
-                    addNode({
-                        idxId,
-                        type:"indexNode",
-                        data:{path:idxPath,label:`[${idx}]`,value:el},
-                        position:{x:(level+2)*200,y:nodes.length*200},
-                        level:level+2
-                    })
-                    addEdge(arrId,idxId)
-                }
-                else{
-                    const childId = processValue(el,idxPath,level+2)
-                    addEdge(arrId,childId)
-                }
-            })
-        }
-            else{
-                const childId = processValue(val,childPath,level+1)
-                addEdge(id,childId)
-            }
-        }
-        return id;
+            addEdge(arrId, idxId);
+          } else {
+            const childId = processValue(el, idxPath, level + 2);
+            addEdge(arrId, childId);
+          }
+        });
+      } else {
+        const childId = processValue(val, childPath, level + 1);
+        addEdge(id, childId);
+      }
     }
+    return id;
+  }
 
-    function processValue(val, path, level) {
+  function processValue(val, path, level) {
     if (val === null || typeof val !== "object") {
-      // primitive root
       const id = nextId("prim");
       addNode({
         id,
         type: "primitiveRootNode",
-        data: { path, label: path.split(".").slice(-1)[0], value: val },
-        position: { x: 0, y: 0 },
+        data: { path, label: path.split(".").slice(-1)[0] || "value", value: val },
+        position: { x: level * 220, y: nodes.length * 90 },
         level,
       });
       return id;
     }
+
     if (Array.isArray(val)) {
       const arrId = nextId("arr");
       addNode({
         id: arrId,
-        type: "arrayNode",
+        type: "arrayNode", // keep consistent with nodeTypes
         data: { path, label: `${path.split(".").slice(-1)[0] || "array"}[]`, length: val.length },
-        position: { x: level * 200, y: nodes.length * 200 },
+        position: { x: level * 220, y: nodes.length * 90 },
         level,
       });
+
       val.forEach((el, idx) => {
         const idxPath = `${path}[${idx}]`;
         if (el === null || typeof el !== "object") {
@@ -112,7 +110,7 @@ export  function graphifyJSON  (value,rootKey="root"){
             id: idxId,
             type: "indexNode",
             data: { path: idxPath, label: `[${idx}]`, value: el },
-            position: { x: (level + 1) * 200, y:  nodes.length * 200 },
+            position: { x: (level + 1) * 220, y: nodes.length * 90 },
             level: level + 1,
           });
           addEdge(arrId, idxId);
@@ -121,15 +119,18 @@ export  function graphifyJSON  (value,rootKey="root"){
           addEdge(arrId, childId);
         }
       });
+
       return arrId;
     }
-    // object
+
+    // fallback -> object
     return processObject(val, path, level);
   }
-   
-    processValue(value, rootKey === "" ? "" : rootKey, 0);
+
+  processValue(value, rootKey === "" ? "" : rootKey, 0);
   return { nodes, edges };
-   }
+}
+
 
 
    export function flattenToPathMap(obj, prefix = "") {

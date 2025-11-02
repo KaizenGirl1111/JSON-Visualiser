@@ -1,4 +1,4 @@
-import { useState,useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./SplitContainer.css";
 import GraphVisualiser from "../GraphVisualiser/GraphVisualiser";
 import InputArea from "../InputArea/InputArea";
@@ -9,35 +9,31 @@ function SplitContainer() {
   const leftPanelRef = useRef(null);
   const startXRef = useRef(0);
   const startWidthRef = useRef(0);
-    const [obj,setObj] = useState({
-  name: "jsontree",
-  private: true,
-  scripts: {
-    dev: "next dev",
-    build: "next build"
-  },
-  dependencies: {
-    react: "18.2.0",
-    config: "^13.4.7",
-    deep: {
-      nested: 1,
-      flag: true
-    }
-  },
-  tags: [
-    "ui",
-    "visualizer"
-  ],
-  misc: null,
-  nums: [
-    1,
-    2,
-    {
-      x: 5
-    }
-  ]
-}
-);
+  const [obj, setObj] = useState({
+    name: "jsontree",
+    private: true,
+    scripts: {
+      dev: "next dev",
+      build: "next build",
+    },
+    dependencies: {
+      react: "18.2.0",
+      config: "^13.4.7",
+      deep: {
+        nested: 1,
+        flag: true,
+      },
+    },
+    tags: ["ui", "visualizer"],
+    misc: null,
+    nums: [
+      1,
+      2,
+      {
+        x: 5,
+      },
+    ],
+  });
 
   const handleMouseDown = (e) => {
     if (e.button !== 0) return;
@@ -49,31 +45,34 @@ function SplitContainer() {
 
     // read computed flex-basis (px)
     const styles = window.getComputedStyle(leftPanel);
-    const flexBasis = styles.getPropertyValue("flex-basis") || styles.getPropertyValue("width");
-    startWidthRef.current = Number.parseFloat(flexBasis) || leftPanel.getBoundingClientRect().width;
+    const flexBasis =
+      styles.getPropertyValue("flex-basis") || styles.getPropertyValue("width");
+    startWidthRef.current =
+      Number.parseFloat(flexBasis) || leftPanel.getBoundingClientRect().width;
 
     // prevent selecting text while dragging
     document.body.style.userSelect = "none";
     document.body.style.cursor = "col-resize";
   };
 
-     function handleTouchStart(e){
-        // initialize touch drag
-        const touch = e.touches[0];
-        if (!touch) return;
-        isMouseDown.current = true;
-        startXRef.current = touch.clientX;
-        const leftPanel = leftPanelRef.current;
-        const styles = window.getComputedStyle(leftPanel);
-        const flexBasis = styles.getPropertyValue("flex-basis") || styles.getPropertyValue("width");
-        startWidthRef.current = Number.parseFloat(flexBasis) || leftPanel.getBoundingClientRect().width;
-        document.body.style.userSelect = "none";
-        document.body.style.cursor = "col-resize";
-        e.preventDefault();
-      
-     }
+  function handleTouchStart(e) {
+    // initialize touch drag
+    const touch = e.touches[0];
+    if (!touch) return;
+    isMouseDown.current = true;
+    startXRef.current = touch.clientX;
+    const leftPanel = leftPanelRef.current;
+    const styles = window.getComputedStyle(leftPanel);
+    const flexBasis =
+      styles.getPropertyValue("flex-basis") || styles.getPropertyValue("width");
+    startWidthRef.current =
+      Number.parseFloat(flexBasis) || leftPanel.getBoundingClientRect().width;
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "col-resize";
+    e.preventDefault();
+  }
 
-    useEffect(() => {
+  useEffect(() => {
     function handleMouseMove(e) {
       if (!isMouseDown.current) return;
       const leftPanel = leftPanelRef.current;
@@ -122,13 +121,15 @@ function SplitContainer() {
       document.body.style.cursor = "";
     };
   }, []);
-
-
   return (
-    <div className="split-container"> 
-      <InputArea leftPanelRef={leftPanelRef} obj={obj} setObj={setObj}/>
-      <div className="divider" onMouseDown={handleMouseDown} onTouchStart={handleTouchStart} />
-      <GraphVisualiser jsonText={obj}/>
+    <div className="split-container">
+      <InputArea leftPanelRef={leftPanelRef} obj={obj} setObj={setObj} />
+      <div
+        className="divider"
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+      />
+      <GraphVisualiser jsonText={obj} />
     </div>
   );
 }

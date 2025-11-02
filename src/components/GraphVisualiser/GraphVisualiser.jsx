@@ -1,14 +1,13 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useEffect } from "react";
 import {
   ReactFlow,
   ReactFlowProvider,
-  Panel,
   Controls,
-  Background,
-  MiniMap,
   applyNodeChanges,
   applyEdgeChanges,
-  addEdge
+  addEdge,
+  useNodesState,
+  useEdgesState
 //  useNodesState,
  // useEdgesState,
 } from "@xyflow/react";
@@ -29,22 +28,23 @@ const nodeTypes = {
 };
 
 function GraphVisualiser({jsonText}) {
-  const sample = useMemo(
-    () => (jsonText),
-    [jsonText]
-  );
-const {nodes,edges} = graphifyJSON(sample,"")
+const {nodes,edges} = useMemo(()=>{
+    const res = graphifyJSON(jsonText,"")
+    return res ?? {nodes:[],edges:[]}
+}
+,[jsonText])
 
-const [rawNodes,setRawNodes] = useState(nodes)
-const [rawEdges,setRawEdges] = useState(edges)
-  const onNodesChange = useCallback(
-    (changes) => setRawNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-    [],
-  );
-  const onEdgesChange = useCallback(
-    (changes) => setRawEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    [],
-  );
+const [rawNodes,setRawNodes,onNodesChange] = useNodesState(nodes)
+const [rawEdges,setRawEdges,onEdgesChange] = useEdgesState(edges)
+
+//   const onNodesChange = useCallback(
+//     (changes) => setRawNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
+//     [],
+//   );
+//   const onEdgesChange = useCallback(
+//     (changes) => setRawEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+//     [],
+//   );
 
 //   // build raw nodes/edges
 //   const { nodes: rawNodes, edges: rawEdges } = useMemo(() => graphifyJSON(sample, "package.json"), [sample]);
@@ -76,24 +76,16 @@ const [rawEdges,setRawEdges] = useState(edges)
 //   const rfInstanceRef = useRef(null);
 //   const onInit = useCallback((instance) => (rfInstanceRef.current = instance), []);
 
-//   // re-run layout when raw graph changes
-//   useEffect(() => {
-//     const nodesCopy = rawNodes.map((n) => ({ ...n }));
-//     const edgesCopy = rawEdges.map((e) => ({ ...e }));
-//     const idSet = new Set(nodesCopy.map((n) => n.id));
-//     const filtered = edgesCopy.filter((e) => idSet.has(e.source) && idSet.has(e.target));
-//     const safeEdges = filtered.map((e) => ({ ...e, type: "smoothstep", style: { stroke: "#60a5fa", strokeWidth: 2 } }));
-//     if (typeof applySimpleTreeLayout === "function") {
-//    //   applySimpleTreeLayout(nodesCopy, safeEdges, { direction: "LR", xGap: 260, yGap: 18, nodeHeight: 90 });
-//     }
-//     setNodes(nodesCopy);
-//     setEdges(safeEdges);
-//   }, [rawNodes, rawEdges, setNodes, setEdges]);
 
+  
+  useEffect(() => {
+    // set copies to avoid accidental shared refs with React Flow internals
+    setRawNodes(nodes.map(n => ({ ...n })));
+    setRawEdges(edges.map(e => ({ ...e })));
+  }, [nodes, edges, setRawNodes, setRawEdges]);
 
 
  const onConnect = useCallback((params) => setRawEdges((eds) => addEdge({ ...params, type: 'smoothstep' }, eds)), [setRawEdges]);
-  {console.log(rawNodes,rawEdges)}
   return (
     <ReactFlowProvider>
       <div className="graph-container">
@@ -104,12 +96,12 @@ const [rawEdges,setRawEdges] = useState(edges)
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
-
         >
           <Controls/>
         </ReactFlow>
       </div>
     </ReactFlowProvider>
   );
-}
+  }
+
 export default GraphVisualiser;

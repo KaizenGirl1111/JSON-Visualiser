@@ -6,7 +6,7 @@ import { Handle,Position } from "@xyflow/react";
     <div className="index-node">
       <div className="index-node-label">{label}</div>
       <div className="index-node-value">{JSON.stringify(value)}</div>
-       <Handle type="target" position={Position.Left} />
+      <Handle type="target" position={Position.Left} /> 
     </div>
   );
 }
